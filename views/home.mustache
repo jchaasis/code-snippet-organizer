@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Code Snippet Home</title>
+</head>
+
+<body>
+  <header>
+  </header>
+  <main>
+    <section class="snip-search">
+      <form method="post" action="search">
+          <select name="select" id="select">
+            <option value="All Snippets">All Snippets</option>
+            <option value="language">Language</option>
+            <option value="tags">Tags</option>
+          </select>
+      </form>
+    </section>
+
+    <section class="snip-display">
+      <ul>
+        {{ #snippets }}
+          <li>
+            <p> {{ title }}</p>
+            <p> {{ language }} </p>
+            <p> {{ code }}</p>
+         </li>
+        {{ /snippets }}
+      </ul>
+    </section>
+
+
+  </main>
+</body>
+
+</html>
