@@ -10,7 +10,8 @@ const snippetSchema = new mongoose.Schema({
   code: {type: String, required: true, unique: true},
   notes:{type: String, required: false, unique: false},
   language: {type: String, required: true, unique: false},
-  tags: [],
+  tags: [{type: String}],
+  // created_by : {type: String, required: true, unique:false}
 });
 
 const Snippet = mongoose.model('Snippet', snippetSchema);

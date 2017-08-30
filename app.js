@@ -66,6 +66,7 @@ server.use(bodyparser.urlencoded({ extended: false }));
       });
     });
 
+
     //code display page
     server.get('/display/:snippet_id', function(req, res){
 
@@ -138,7 +139,31 @@ server.use(bodyparser.urlencoded({ extended: false }));
 
       res.redirect('/add');
     });
+
+    //search by language and tags
+    server.post('/search', function(req, res){
+        //the fields that are selected in the dropbox should //be used to specify which property the user wants to
+        //search by.
+        console.log(req.body.search_term);
+        //if the value of the select is language,
+        //find only those items and show them
+        Snippets.find({
+          language: req.body.search_term
+        }).then(function (snippets){
+
+              console.log(snippets);
+
+              console.log(Snippets.language);
+
+              res.render('home', {
+                snippets: snippets,
+              });
+          });
+
+     });
+
+
 //open server
 server.listen(5500, function(){
-  console.log("Snip away");
+  console.log("Snip away on port 5500");
 })
