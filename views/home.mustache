@@ -7,8 +7,16 @@
 
 <body>
   <header>
+    <nav>
+      <ul>
+        <a href="home"><li><h3>Home</h3></li></a>
+        <a href="add"><li><h3>Add New Snippet</h3></li></a>
+      <ul>
+    </nav>
   </header>
   <main>
+    <!--TODO: fix the username on the greeting  -->
+    <h1> Hello {{ user.name }}! </h1>
     <section class="snip-search">
       <form method="post" action="search">
           <select name="select" id="select">
@@ -22,11 +30,12 @@
     <section class="snip-display">
       <ul>
         {{ #snippets }}
-          <li>
+          <a href="/display/{{ _id }}">
+            <li>
             <p> {{ title }}</p>
             <p> {{ language }} </p>
-            <p> {{ code }}</p>
-         </li>
+            </li>
+         </a>
         {{ /snippets }}
       </ul>
     </section>

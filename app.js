@@ -1,8 +1,17 @@
+//TODO:have a comprehensive set of tests for all controllers and models
+// have registration and login
+// allow you to create a snippet
+// allow you to see a list of all your snippets
+// allow you to see a list of all your snippets for a specific language
+// allow you to see a list of all your snippets for a specific tag
+// allow you to look at an individual snippet
+
+
 //requirements
 const express = require('express');
 const mustache = require('mustache-express');
 const bodyparser = require('body-parser');
-const session = require('express-session');
+const session = require('express-session'); //TODO: Do We even need sessions?
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -52,9 +61,25 @@ server.use(bodyparser.urlencoded({ extended: false }));
       Snippets.find().then(function (snippets){
         res.render('home', {
             snippets: snippets,
+            // name: user,
         });
       });
     });
+
+    //code display page
+    server.get('/display/:snippet_id', function(req, res){
+
+          const id =  req.params.snippet_id; // the _id is mongo specific
+
+          Snippets.findOne({
+            _id: id
+          }).then(function(results){
+
+            res.render('display', {
+                snippet: results, //result from the database
+            });
+          });
+      });
 
     //add snip page
     server.get('/add', function(req, res){
@@ -77,19 +102,28 @@ server.use(bodyparser.urlencoded({ extended: false }));
       const username = req.body.username;
       const password = req.body.password;
 
-      // let user = null;
-      //find the users collection and convert to an array so we
-      //can loop through it.
+      let user = null;
+      //find the users in the Users collection so that we can //iterate through and check the given username with the users //in the database
 
-      let usersList = Users.find().then(function(data){
-        let usersArr = data.toArray();
-        console.log(usersArr);
-      });
+        Users.find().then(function(data){
+          for (let i = 0; i < data.length; i++){
 
-      console.log(usersList);
+            if (data[i].name === username &&
+               data[i].password === password){
 
-      res.redirect('/home');
+                 user = data[i].name;
+            }
+          }
+          //if the user info matches then we set up their session
+          // and send them to the home screen
+          if (user !== null){
+            req.session.who = user;
+            res.redirect('/home');
+          } else {
+            res.redirect('/login');
+          }
 
+        });
     });
 
     //new Snippet
