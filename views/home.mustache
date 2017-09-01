@@ -18,9 +18,9 @@
     <!--TODO: fix the username on the greeting  -->
     <h1> Hello {{ user.name }}! </h1>
     <section class="snip-search">
+      <h4>Narrow search:</h4>
       <form method="post" action="/search">
           <select name="select" id="select">
-            <option value="All Snippets">All Snippets</option>
             <option value="language">Language</option>
             <option value="tags">Tags</option>
           </select>
@@ -30,14 +30,15 @@
     </section>
 
     <section class="snip-display">
+      <h3>Snippets:</h3>
       <ul>
         {{ #snippets }}
+        <li>
           <a href="/display/{{ _id }}">
-            <li>
             <p> {{ title }}</p>
             <p> {{ language }} </p>
-            </li>
          </a>
+        </li>
         {{ /snippets }}
       </ul>
     </section>

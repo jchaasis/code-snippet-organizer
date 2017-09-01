@@ -1,10 +1,8 @@
-//TODO:have a comprehensive set of tests for all controllers and models
+//TODO:
+// tests
 // have registration and login
-// allow you to create a snippet
-// allow you to see a list of all your snippets
-// allow you to see a list of all your snippets for a specific language
+// allow you to create a snippet TODO: tags
 // allow you to see a list of all your snippets for a specific tag
-// allow you to look at an individual snippet
 
 
 //requirements
@@ -53,7 +51,11 @@ server.use(bodyparser.urlencoded({ extended: false }));
 
     //registration page
     server.get('/register', function(req, res){
-      res.render('register');
+
+      res.render('register', {
+                // errormessage: errormessage,
+      });
+
     });
 
     //home page
@@ -90,9 +92,24 @@ server.use(bodyparser.urlencoded({ extended: false }));
   //post
     //new user
     server.post('/register', function(req, res){
-      Users.create({
-        name:req.body.new_username,
-        password:req.body.new_password,
+
+      Users.find().then(function(data){
+        //check with current usernames so that they remain unique
+        for (let j = 0; j < data.length; j++){
+          if (req.body.new_username === data[j].name){
+            let errormessage = "username taken, please pick another name";
+            res.redirect('/register');
+            return;
+          }
+          if (req.body.new_username !== data[j].name){
+            Users.create({
+              name:req.body.new_username,
+              password:req.body.new_password,
+            });
+            res.redirect('/home');
+            return;
+          }
+        }
       });
     });
 
@@ -129,12 +146,16 @@ server.use(bodyparser.urlencoded({ extended: false }));
 
     //new Snippet
     server.post('/add', function(req, res){
+      let tags = [];
+      tags.push(req.body.tags);
+
+      console.log (tags);
       Snippets.create({
         title: req.body.title,
         code: req.body.code,
         notes: req.body.notes,
         language: req.body.language,
-        tag: req.body.tags,
+        tags: req.body.tags,
       });
 
       res.redirect('/add');
@@ -144,21 +165,32 @@ server.use(bodyparser.urlencoded({ extended: false }));
     server.post('/search', function(req, res){
         //the fields that are selected in the dropbox should //be used to specify which property the user wants to
         //search by.
-        console.log(req.body.search_term);
         //if the value of the select is language,
         //find only those items and show them
-        Snippets.find({
-          language: req.body.search_term
-        }).then(function (snippets){
+        console.log(req.body.select);
+        if (req.body.select === 'language'){
+          Snippets.find({
+            language: req.body.search_term
+          }).then(function (snippets){
 
-              console.log(snippets);
+                res.render('home', {
+                  snippets: snippets,
+                });
+            });
+        }
 
-              console.log(Snippets.language);
+        if (req.body.select === 'tags'){
+          Snippets.find({
+            tags: req.body.search_term
+          }).then(function (snippets){
 
-              res.render('home', {
-                snippets: snippets,
-              });
-          });
+            // loop through the tags 
+
+                res.render('home', {
+                  snippets: snippets,
+                });
+            });
+        }
 
      });
 

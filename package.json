@@ -14,7 +14,9 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
+    "jest": "^20.0.4",
     "mongoose": "^4.11.8",
-    "mustache-express": "^1.2.5"
+    "mustache-express": "^1.2.5",
+    "supertest": "^3.0.0"
   }
 }
