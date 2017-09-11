@@ -146,8 +146,18 @@ server.use(bodyparser.urlencoded({ extended: false }));
 
     //new Snippet
     server.post('/add', function(req, res){
-      let tags = [];
-      tags.push(req.body.tags);
+
+      //seperate the tags string into individual tags in an array
+
+      // function splitTags(tags){
+
+       let tags = req.body.tags;
+       let splittags = tags.split(' ');
+
+      //  for (let i = 0; i < splittags.length; i++){
+      //   return splittags[i].trim();
+      //  }
+
 
       console.log (tags);
       Snippets.create({
@@ -155,7 +165,7 @@ server.use(bodyparser.urlencoded({ extended: false }));
         code: req.body.code,
         notes: req.body.notes,
         language: req.body.language,
-        tags: req.body.tags,
+        tags: splittags,
       });
 
       res.redirect('/add');
@@ -167,7 +177,6 @@ server.use(bodyparser.urlencoded({ extended: false }));
         //search by.
         //if the value of the select is language,
         //find only those items and show them
-        console.log(req.body.select);
         if (req.body.select === 'language'){
           Snippets.find({
             language: req.body.search_term
@@ -184,18 +193,19 @@ server.use(bodyparser.urlencoded({ extended: false }));
             tags: req.body.search_term
           }).then(function (snippets){
 
-            // loop through the tags 
-
                 res.render('home', {
                   snippets: snippets,
                 });
             });
         }
-
      });
 
 
 //open server
-server.listen(5500, function(){
-  console.log("Snip away on port 5500");
-})
+
+  server.listen(5500, function(){
+    console.log("Snip away on http://localhost:5500/login");
+  });
+
+//for testing
+module.exports = server;
